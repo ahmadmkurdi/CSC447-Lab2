@@ -20,6 +20,7 @@
 
 
 int *random_array(size_t size);
+void test_sequential(int *array, size_t size);
 void test_openmp(int *array, size_t size);
 void test_pthreads(int *array, size_t size);
 int is_sorted(int *sort, size_t size);
@@ -37,6 +38,13 @@ int main(void){
   array1K = random_array(1000);
   array10K = random_array(10000);
   array100K = random_array(100000);
+
+  // perform sequential tests
+  printf("-------- Testing SEQUENTIAL -----------\n");
+  printf("--------------------------------------\n");
+  test_sequential(array1K, 1000);
+  test_sequential(array10K, 10000);
+  test_sequential(array100K, 100000);
 
   // perform tests using OpenMP
   printf("----------- Testing OPENMP ------------\n");
@@ -67,6 +75,22 @@ int *random_array(size_t size){
     array[i] = (rand() % RANDOM_MAX);
 
   return array;
+}
+
+void test_sequential(int *array, size_t size){
+  int *sort = NULL;
+
+  printf("| Array size %d:\n", (int) size);
+  printf("| | Time: \n");
+
+  sort = bucket_sort_sequential(array, size, RANDOM_MAX);
+  if(!is_sorted(sort,size)){
+    printf("Array not ordered!\n");
+    exit(0);
+  }
+  free(sort);
+
+  printf("| \n");
 }
 
 void test_openmp(int *array, size_t size){
